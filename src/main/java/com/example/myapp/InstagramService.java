@@ -70,14 +70,10 @@ public class InstagramService {
 
     public List<Post> getPostsByUser(String username) {
         validateKnownUser(username);
-        List<Post> posts = new ArrayList<>();
-        for (Post post : postsById.values()) {
-            if (post.authorUsername().equals(username)) {
-                posts.add(post);
-            }
-        }
-        posts.sort(Comparator.comparingLong(Post::id).reversed());
-        return posts;
+        return postsById.values().stream()
+                .filter(post -> post.authorUsername().equals(username))
+                .sorted(Comparator.comparingLong(Post::id).reversed())
+                .toList();
     }
 
     private void validateKnownUser(String username) {
